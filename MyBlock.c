@@ -1,6 +1,7 @@
 #include "MyBlock.h"
 #include "MyMemory.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 extern MyMemory memory;
 
@@ -20,11 +21,14 @@ void *myAlloc(int nBytes) {
 		memory.lastBlock = block;
 	}
 	else {
+		printf("%p ", memory.lastBlock->contentPtr);
+		printf("%d ", memory.lastBlock->contentSize);
+		printf("%d \n", sizeof(struct myBlockCel));
 		char *p = (char *)memory.lastBlock->contentPtr + memory.lastBlock->contentSize;
-		p -= 16; //PAS NORMAL
+		//p -= 12; //PAS NORMAL
 		block = (MyBlock)p;
 		//don't forget the size of a block
-		block++;
+		//block++;
 		memory.lastBlock->nextBlock = block;
 		memory.lastBlock = block;
 	}
