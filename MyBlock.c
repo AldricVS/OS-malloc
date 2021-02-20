@@ -4,15 +4,54 @@
 
 extern MyMemory memory;
 
+int isSpaceSufficient(char *begin, char *end, int nBytes) {
+	unsigned int spaceBetween = end - begin;
+	// We need to take account of the size of the block too
+	return spaceBetween >= nBytes + sizeof(struct myBlockCel);
+}
+
+void *searchValidSpace(int nBytes) {
+	// TODO : finir la fonction searchValidSpace (oui ça serait cool)
+
+	// If there is one, search the space between the begin of the space and the first block
+	char *ptrBegin = memory.array;
+	char *ptrFirstBlock = memory.firstBlock;
+	if (ptrBegin != ptrFirstBlock) {
+		// If we can put the new block at the beginning of the memory
+		if(isSpaceSufficient(ptrBegin, ptrFirstBlock, nBytes)){
+			return ptrBegin;
+		}
+	}
+	// Else, we have to go through each of the blocks and find a sufficient space
+	MyBlock firstBlock = memory.firstBlock;
+	MyBlock nextBlock = firstBlock->nextBlock;
+	// Finally, search between the last block and the end of the memory
+}
+
 void *myAlloc(int nBytes) {
+	MyBlock block;
+	// If no block is present, add it at the beginning
+
+	/*if (memory.lastBlock == NULL) {
+		if (isSpaceSufficient(memory.array, memory.array + memory.size, nBytes)) {
+			block = (void *)memory.array;
+			memory.firstBlock = block;
+			memory.lastBlock = block;
+		}
+		else {
+			// No enough space to store it
+			return -1;
+		}
+	}*/
+
 	/*
 	 * For now, this will just create a new block at the end of the list,
 	 * no matter the fragmentation
 	 */
+	//searchValidSpace(nBytes);
 
 	// Search the last block, if NULL, there is nothing in the memory
 	MyBlock lastBlock = memory.lastBlock;
-	MyBlock block;
 	if (lastBlock == NULL) {
 		//set it to the very beginning of the memory
 		block = (void*)memory.array;
