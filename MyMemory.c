@@ -31,3 +31,21 @@ int freeMemory() {
         return memory.size;
     }
 }
+
+void insertBlockHead(MyBlock newBlock) {
+    MyBlock firstBlock = memory.firstBlock;
+    newBlock->nextBlock = firstBlock;
+    firstBlock = newBlock;
+}
+
+void insertBlockAfter(MyBlock newBlock, MyBlock previousBlock) {
+    MyBlock afterBlock = previousBlock->nextBlock;
+    previousBlock->nextBlock = newBlock;
+    newBlock->nextBlock = afterBlock;
+}
+
+void insertBlockTail(MyBlock newBlock) {
+    MyBlock lastBlock = memory.lastBlock;
+    lastBlock->nextBlock = newBlock;
+    newBlock->nextBlock = NULL;
+}
