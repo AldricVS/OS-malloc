@@ -10,69 +10,89 @@ int isSpaceSufficient(char *begin, char *end, int nBytes) {
 	return spaceBetween >= nBytes + sizeof(struct myBlockCel);
 }
 
-void *searchValidSpace(int nBytes) {
-	// TODO : finir la fonction searchValidSpace (oui ça serait cool)
+unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock) {
+	// Get the end of the first block allocated memory
+	char *firstBlockEnd = (char *)firstBlock->contentPtr + firstBlock->contentSize;
+	char *seconfBlockBegin = (char *)secondBlock;
+	return seconfBlockBegin - firstBlockEnd;
+}
 
-	// If there is one, search the space between the begin of the space and the first block
-	char *ptrBegin = memory.array;
-	char *ptrFirstBlock = memory.firstBlock;
-	if (ptrBegin != ptrFirstBlock) {
-		// If we can put the new block at the beginning of the memory
-		if(isSpaceSufficient(ptrBegin, ptrFirstBlock, nBytes)){
-			return ptrBegin;
+void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
+	// If there is no block now
+	if (memory.firstBlock == NULL) {
+		char *memoryStart = memory.array;
+		char *memoryEnd = memoryStart + memory.size;
+		if (isSpaceSufficient(memoryStart, memoryEnd, nBytes)) {
+			// There is no previous block for this new block
+			*previousBlock = NULL;
+			return memoryStart;
 		}
 	}
-	// Else, we have to go through each of the blocks and find a sufficient space
-	MyBlock firstBlock = memory.firstBlock;
-	MyBlock nextBlock = firstBlock->nextBlock;
-	// Finally, search between the last block and the end of the memory
+	else {
+		// If there is one, search the space between the begin of the space and the first block
+		char *ptrBegin = memory.array;
+		char *ptrFirstBlock = (char *)memory.firstBlock;
+		if (ptrBegin != ptrFirstBlock) {
+			// If we can put the new block at the beginning of the memory
+			if (isSpaceSufficient(ptrBegin, ptrFirstBlock, nBytes)) {
+				// There is no previous block for this new block
+				*previousBlock = NULL;
+				return ptrBegin;
+			}
+		}
+		// Else, we have to go through each of the blocks and find a sufficient space
+		MyBlock firstBlock = memory.firstBlock;
+		MyBlock nextBlock = firstBlock->nextBlock;
+		char *firstBlockEnd;
+		char *secondBlockBegin;
+		while (nextBlock != NULL) {
+			// If the space between first block end and second block begin is sufficient,
+			// return the pointer to the and of the first block
+			firstBlockEnd = (char *)firstBlock->contentPtr + firstBlock->contentSize;
+			secondBlockBegin = (char *)nextBlock;
+			if (firstBlockEnd != secondBlockBegin && isSpaceSufficient(firstBlockEnd, secondBlockBegin, nBytes)) {
+				// The previous block if the firstBlock
+				*previousBlock = firstBlock;
+				return firstBlockEnd;
+			}
+			firstBlock = nextBlock;
+			nextBlock = nextBlock->nextBlock;
+		}
+		// Finally, search between the last block and the end of the memory
+		// Here, firstBLock is the lastBlock of the memory
+		firstBlockEnd = (char *)firstBlock->contentPtr + firstBlock->contentSize;
+		char *endMemoryPtr = memory.array + memory.size;
+		if (isSpaceSufficient(firstBlockEnd, endMemoryPtr, nBytes)) {
+			// The previous block if the firstBlock
+			*previousBlock = firstBlock;
+			return firstBlockEnd;
+		}
+	}
+	//we didn't find any sufficient space in the memory
+	return NULL;
 }
 
 void *myAlloc(int nBytes) {
-	MyBlock block;
-	// If no block is present, add it at the beginning
-
-	/*if (memory.lastBlock == NULL) {
-		if (isSpaceSufficient(memory.array, memory.array + memory.size, nBytes)) {
-			block = (void *)memory.array;
-			memory.firstBlock = block;
-			memory.lastBlock = block;
-		}
-		else {
-			// No enough space to store it
-			return -1;
-		}
-	}*/
-
-	/*
-	 * For now, this will just create a new block at the end of the list,
-	 * no matter the fragmentation
-	 */
-	//searchValidSpace(nBytes);
-
-	// Search the last block, if NULL, there is nothing in the memory
-	MyBlock lastBlock = memory.lastBlock;
-	if (lastBlock == NULL) {
-		//set it to the very beginning of the memory
-		block = (void*)memory.array;
-		memory.firstBlock = block;
-		memory.lastBlock = block;
+	MyBlock previousBlock = NULL;
+	void *blockPtr = searchValidSpace(nBytes, &previousBlock);
+	if (blockPtr == NULL) {
+		return NULL;
 	}
 	else {
-		char *p = (char *)memory.lastBlock->contentPtr + memory.lastBlock->contentSize;
-		block = (MyBlock)p;
-		memory.lastBlock->nextBlock = block;
-		memory.lastBlock = block;
+		//create a new block and add it in the memory at the right position
+		MyBlock block = NULL;
+		// If previsousBlock is NULL, this block is the new firstBlock of the memory
+		if (previousBlock == NULL) {
+			insertBlockHead(&block);
+		}
+		else {
+			insertBlockAfter(&block, previousBlock);
+		}
+		block->contentSize = nBytes;
+		// Let the space for the struct (pointer arithmetic)
+		block->contentPtr = block + 1;
+		return block->contentPtr;
 	}
-	block->contentSize = nBytes;
-	// Let the space for the struct (pointer arithmetic)
-	block->contentPtr = block + 1;
-	// This is the last block of the list
-	// TODO : change it when the function will be less one-way
-	block->nextBlock = NULL;
-	
-	// TODO : check if there is enough space to alloc
-	return block->contentPtr;
 }
 
 int myFree(void *ptr) {

@@ -16,8 +16,8 @@ typedef struct mymemory{
 int initMemory(int nBytes);
 int freeMemory();
 
-void insertBlockHead(MyBlock newBlock);
-void insertBlockAfter(MyBlock newBlock, MyBlock previousBlock);
-void insertBlockTail(MyBlock newBlock);
+void insertBlockHead(MyBlock *newBlock);
+void insertBlockAfter(MyBlock *newBlock, MyBlock previousBlock);
+void insertBlockTail(MyBlock *newBlock);
 
 #endif // MY_MEMORY_H
