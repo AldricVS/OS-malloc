@@ -9,15 +9,13 @@ int initMemory(int nBytes) {
 	if (ptr == NULL) {
 		return -1;
 	}
-	else {
-		// Init memory and return the number of bytes allocated
-		memory.size = nBytes;
-		memory.isFree = 0;
-		memory.array = ptr;
-		memory.firstBlock = NULL;
-		memory.lastBlock = NULL;
-		return nBytes;
-	}
+
+	// Init memory and return the number of bytes allocated
+	memory.size = nBytes;
+	memory.isFree = 0;
+	memory.array = ptr;
+	memory.listBlock = NULL;
+	return nBytes;
 }
 
 int freeMemory() {
@@ -32,39 +30,67 @@ int freeMemory() {
 	}
 }
 
+/**
+Utiliser cette méthode peut faire que 2 block se partage le même espace mémoire ?
+A tester ...
+*/
 void insertBlockHead(MyBlock *newBlock) {
-	MyBlock firstBlock = memory.firstBlock;
-	*newBlock = memory.array;
+	MyBlock firstBlock = memory.listBlock;
 	if (firstBlock != NULL) {
 		(*newBlock)->nextBlock = firstBlock;
 	}
-	memory.firstBlock = *newBlock;
-	if (memory.lastBlock == NULL) {
-		memory.lastBlock = *newBlock;
-		(*newBlock)->nextBlock = NULL;
-	}
+	(*newBlock) = memory.array;
+	memory.listBlock = *newBlock;
 }
 
 void insertBlockAfter(MyBlock *newBlock, MyBlock previousBlock) {
 	MyBlock afterBlock = previousBlock->nextBlock;
-	*newBlock = (char *)previousBlock->contentPtr + previousBlock->contentSize;
+	(*newBlock) = (char *)previousBlock->contentPtr + previousBlock->contentSize;
 	previousBlock->nextBlock = *newBlock;
 	(*newBlock)->nextBlock = afterBlock;
-	// If the previous block was the last one
-	if (afterBlock == NULL) {
-		memory.lastBlock = *newBlock;
-	}
 }
 
 void insertBlockTail(MyBlock *newBlock) {
-	MyBlock lastBlock = memory.lastBlock;
+	MyBlock lastBlock = memory.listBlock;
 	if (lastBlock == NULL) {
 		insertBlockHead(newBlock);
 	}
 	else {
-		newBlock = (char *)lastBlock->contentPtr + lastBlock->contentSize;
+		MyBlock nextBlock = lastBlock->nextBlock;
+		while (nextBlock != NULL) {
+			lastBlock = nextBlock;
+			nextBlock = nextBlock->nextBlock;
+		}
+		(*newBlock) = (char *)lastBlock->contentPtr + lastBlock->contentSize;
 		lastBlock->nextBlock = *newBlock;
-		memory.lastBlock = *newBlock;
 		(*newBlock)->nextBlock = NULL;
 	}
+}
+
+void freeBlock(MyBlock *block) {
+	MyBlock previousBlock = memory.listBlock;
+	int sizeFreed;
+
+	if (&previousBlock == block) {
+		sizeFreed = myFree((*block)->contentPtr);
+		memory.listBlock = (*block)->nextBlock;
+		if (sizeFreed != (*block)->contentSize) {
+			perror("Error when freeing Block :\n\tReturning memory value do not match block size\n");
+			exit(-1);
+		}
+	}
+	else {
+		while (((*previousBlock).nextBlock != NULL) && ((*previousBlock).nextBlock != *block)) {
+			previousBlock = (*previousBlock).nextBlock;
+		}
+		if ((*previousBlock).nextBlock == block) {
+			sizeFreed = myFree((*block)->contentPtr);
+			previousBlock->nextBlock = (*block)->nextBlock;
+			if (sizeFreed != (*block)->contentSize) {
+				perror("Error when freeing Block :\n\tReturning memory value do not match block size\n");
+				exit(-1);
+			}
+		}
+	}
+	//return sizeFreed;
 }

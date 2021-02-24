@@ -9,8 +9,7 @@ typedef struct mymemory{
 	unsigned int size;
 	int isFree;
 	char *array;
-	struct myBlockCel *firstBlock;
-	struct myBlockCel *lastBlock;
+	struct myBlockCel *listBlock;
 }MyMemory;
 
 int initMemory(int nBytes);

@@ -19,7 +19,7 @@ unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock) {
 
 void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
 	// If there is no block now
-	if (memory.firstBlock == NULL) {
+	if (memory.listBlock == NULL) {
 		char *memoryStart = memory.array;
 		char *memoryEnd = memoryStart + memory.size;
 		if (isSpaceSufficient(memoryStart, memoryEnd, nBytes)) {
@@ -31,7 +31,7 @@ void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
 	else {
 		// If there is one, search the space between the begin of the space and the first block
 		char *ptrBegin = memory.array;
-		char *ptrFirstBlock = (char *)memory.firstBlock;
+		char *ptrFirstBlock = (char *)memory.listBlock;
 		if (ptrBegin != ptrFirstBlock) {
 			// If we can put the new block at the beginning of the memory
 			if (isSpaceSufficient(ptrBegin, ptrFirstBlock, nBytes)) {
@@ -41,7 +41,7 @@ void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
 			}
 		}
 		// Else, we have to go through each of the blocks and find a sufficient space
-		MyBlock firstBlock = memory.firstBlock;
+		MyBlock firstBlock = memory.listBlock;
 		MyBlock nextBlock = firstBlock->nextBlock;
 		char *firstBlockEnd;
 		char *secondBlockBegin;
@@ -73,6 +73,11 @@ void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
 }
 
 void *myAlloc(int nBytes) {
+	if (memory.isFree == 1) {
+		perror("Error while allocating Block memory :\n\tMemory is not initialized");
+		exit(-1);
+	}
+
 	MyBlock previousBlock = NULL;
 	void *blockPtr = searchValidSpace(nBytes, &previousBlock);
 	if (blockPtr == NULL) {
@@ -88,6 +93,10 @@ void *myAlloc(int nBytes) {
 		else {
 			insertBlockAfter(&block, previousBlock);
 		}
+		if (block == NULL) {
+			perror("Error while allocating Block memory :\n\tBlock value is NULL\n");
+			exit(-1);
+		}
 		block->contentSize = nBytes;
 		// Let the space for the struct (pointer arithmetic)
 		block->contentPtr = block + 1;
@@ -96,21 +105,21 @@ void *myAlloc(int nBytes) {
 }
 
 int myFree(void *ptr) {
-	int sizeFreed;
-	// If memory is not allocated anymore 
-	if (memory.firstBlock == NULL) {
+	// If no memory is allocated yet
+	if (memory.listBlock == NULL) {
 		return -1;
 	}
 
+	int sizeFreed;
 	//if the first block is the right one, remove it directly
-	if (memory.firstBlock->contentPtr == ptr) {
-		sizeFreed = memory.firstBlock->contentSize;
-		memory.firstBlock = memory.firstBlock->nextBlock;
+	if (memory.listBlock->contentPtr == ptr) {
+		sizeFreed = memory.listBlock->contentSize;
+		memory.listBlock = memory.listBlock->nextBlock;
 	}
 	else {
 		// Search the block who have this pointer
 		// keep the previous block in order to properly remove it
-		MyBlock currentBlock = memory.firstBlock;
+		MyBlock currentBlock = memory.listBlock;
 		MyBlock nextBlock = currentBlock->nextBlock;
 		while (nextBlock != NULL && nextBlock->contentPtr < ptr) {
 			currentBlock = nextBlock;
