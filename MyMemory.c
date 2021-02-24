@@ -31,7 +31,7 @@ int freeMemory() {
 }
 
 /**
-Utiliser cette méthode peut faire que 2 block se partage le même espace mémoire ?
+Utiliser cette mÃ©thode peut faire que 2 block se partage le mÃªme espace mÃ©moire ?
 A tester ...
 */
 void insertBlockHead(MyBlock *newBlock) {
@@ -67,26 +67,26 @@ void insertBlockTail(MyBlock *newBlock) {
 	}
 }
 
-void freeBlock(MyBlock *block) {
+void freeBlock(MyBlock block) {
 	MyBlock previousBlock = memory.listBlock;
 	int sizeFreed;
 
-	if (&previousBlock == block) {
-		sizeFreed = myFree((*block)->contentPtr);
-		memory.listBlock = (*block)->nextBlock;
-		if (sizeFreed != (*block)->contentSize) {
+	if (previousBlock == block) {
+		//memory.listBlock = block->nextBlock;
+		sizeFreed = myFree(block->contentPtr);
+		if (sizeFreed != block->contentSize) {
 			perror("Error when freeing Block :\n\tReturning memory value do not match block size\n");
 			exit(-1);
 		}
 	}
 	else {
-		while (((*previousBlock).nextBlock != NULL) && ((*previousBlock).nextBlock != *block)) {
+		while ((previousBlock->nextBlock != NULL) && (previousBlock->nextBlock != block)) {
 			previousBlock = (*previousBlock).nextBlock;
 		}
-		if ((*previousBlock).nextBlock == block) {
-			sizeFreed = myFree((*block)->contentPtr);
-			previousBlock->nextBlock = (*block)->nextBlock;
-			if (sizeFreed != (*block)->contentSize) {
+		if (previousBlock->nextBlock == block) {
+			sizeFreed = myFree(block->contentPtr);
+			//previousBlock->nextBlock = block->nextBlock;
+			if (sizeFreed != block->contentSize) {
 				perror("Error when freeing Block :\n\tReturning memory value do not match block size\n");
 				exit(-1);
 			}

@@ -91,6 +91,8 @@ void *myAlloc(int nBytes) {
 			insertBlockHead(&block);
 		}
 		else {
+			//On devrait rajouter notre block après un autre qu'une fois qu'on ait atteint la fin de notre mémoire ?
+			//insertBlockTail(&block);
 			insertBlockAfter(&block, previousBlock);
 		}
 		if (block == NULL) {

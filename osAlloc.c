@@ -4,6 +4,8 @@
 #include "MyMemory.h"
 #include "MyBlock.h"
 
+extern MyMemory memory;
+
 struct V {
 	int a;
 	char b;
@@ -53,10 +55,17 @@ int main() {
 
 
 	affTab(10, a);
+	affTab(memory.listBlock->contentSize / sizeof(int), memory.listBlock->contentPtr);
 	affTab(15, b);
 	affTab(9, c);
+	printf("Fin affichage Tab\n");
 
-	int res = myFree(a);
+	printf("\nDebut liberation memoire\n");
+	freeBlock(memory.listBlock);
+
+	affTab(5, memory.listBlock->contentPtr);
+
+	int res = myFree(c);
 	if (res == -1) {
 		perror("Error while freeing");
 	}
