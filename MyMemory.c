@@ -18,6 +18,30 @@ int initMemory(int nBytes) {
 	return nBytes;
 }
 
+void displayMemory() {
+	printf("******\n");
+	printf("Memory state :\n");
+	printf("\tMemory size : %d\n", memory.size);
+	printf("\tIs memory free : %s\n", memory.isFree?"true":"false");
+	printf("\n");
+	printf("List of Block contained :\n");
+	MyBlock currentBlock = memory.listBlock;
+	while (currentBlock != NULL) {
+		displayBlock(currentBlock);
+		currentBlock = currentBlock->nextBlock;
+	}
+	printf("******\n");
+}
+
+void clearListBlock() {
+	MyBlock currentBlock = memory.listBlock;
+	while (currentBlock != NULL) {
+		MyBlock blockToFree = currentBlock;
+		currentBlock = currentBlock->nextBlock;
+		freeBlock(blockToFree);
+	}
+}
+
 int freeMemory() {
 	// We can't free memory multiple times
 	if (memory.isFree) {
@@ -25,6 +49,7 @@ int freeMemory() {
 	}
 	else {
 		memory.isFree = 1;
+		clearListBlock();
 		free(memory.array);
 		return memory.size;
 	}
@@ -68,29 +93,17 @@ void insertBlockTail(MyBlock *newBlock) {
 }
 
 void freeBlock(MyBlock block) {
-	MyBlock previousBlock = memory.listBlock;
-	int sizeFreed;
+	block->contentPtr = NULL;
+	free(block);
+}
 
-	if (previousBlock == block) {
-		//memory.listBlock = block->nextBlock;
-		sizeFreed = myFree(block->contentPtr);
-		if (sizeFreed != block->contentSize) {
-			printf("Error when freeing Block :\n\tReturning memory value do not match block size\n");
-			return;
+MyBlock getNBlockInList(int nbBlock) {
+	MyBlock myBlock = memory.listBlock;
+	while (nbBlock > 0) {
+		if (myBlock != NULL) {
+			myBlock = myBlock->nextBlock;
 		}
+		nbBlock--;
 	}
-	else {
-		while ((previousBlock->nextBlock != NULL) && (previousBlock->nextBlock != block)) {
-			previousBlock = (*previousBlock).nextBlock;
-		}
-		if (previousBlock->nextBlock == block) {
-			sizeFreed = myFree(block->contentPtr);
-			//previousBlock->nextBlock = block->nextBlock;
-			if (sizeFreed != block->contentSize) {
-				printf("Error when freeing Block :\n\tReturning memory value do not match block size\n");
-				return;
-			}
-		}
-	}
-	//return sizeFreed;
+	return myBlock;
 }

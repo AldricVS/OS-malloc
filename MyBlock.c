@@ -91,10 +91,9 @@ void *myAlloc(int nBytes) {
 			insertBlockHead(&block);
 		}
 		else {
-			//On devrait rajouter notre block après un autre qu'une fois qu'on ait atteint la fin de notre mémoire ?
-			//insertBlockTail(&block);
 			insertBlockAfter(&block, previousBlock);
 		}
+
 		if (block == NULL) {
 			printf("Error while allocating Block memory :\n\tBlock value is NULL\n");
 			return NULL;
@@ -113,28 +112,37 @@ int myFree(void *ptr) {
 	}
 
 	int sizeFreed;
+	MyBlock currentBlock = memory.listBlock;
+	MyBlock previousBlock;
+
 	//if the first block is the right one, remove it directly
-	if (memory.listBlock->contentPtr == ptr) {
-		sizeFreed = memory.listBlock->contentSize;
-		memory.listBlock = memory.listBlock->nextBlock;
+	if (currentBlock->contentPtr == ptr) {
+		sizeFreed = currentBlock->contentSize;
+		memory.listBlock = currentBlock->nextBlock;
 	}
 	else {
 		// Search the block who have this pointer
 		// keep the previous block in order to properly remove it
-		MyBlock currentBlock = memory.listBlock;
-		MyBlock nextBlock = currentBlock->nextBlock;
-		while (nextBlock != NULL && nextBlock->contentPtr < ptr) {
-			currentBlock = nextBlock;
-			nextBlock = currentBlock->nextBlock;
+		while (currentBlock != NULL && currentBlock->contentPtr < ptr) {
+			previousBlock = currentBlock;
+			currentBlock = currentBlock->nextBlock;
 		}
-		// If currentBlock-> is still NULL, we didn't find the pointer associated
-		if (nextBlock == NULL || nextBlock->contentPtr != ptr) {
+		// If the Block is NULL, we didn't find the pointer associated
+		if (currentBlock == NULL || currentBlock->contentPtr != ptr) {
 			return -1;
 		}
 
 		// Else we free it (remove the corresponding block)
-		sizeFreed = nextBlock->contentSize;
-		currentBlock->nextBlock = nextBlock->nextBlock;
+		sizeFreed = currentBlock->contentSize;
+		previousBlock->nextBlock = currentBlock->nextBlock;
 	}
+	freeBlock(currentBlock);
 	return sizeFreed;
+}
+
+void displayBlock(MyBlock block) {
+	printf("\tBlock status :\n");
+	printf("\tBlock size : %d", block->contentSize);
+	printf("\n");
+	printf("\t***\n");
 }

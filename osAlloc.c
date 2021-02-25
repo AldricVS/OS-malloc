@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "MyMemory.h"
 #include "MyBlock.h"
 
@@ -20,22 +21,38 @@ void affTab(int nELts, int *tab) {
 
 int main(int argc, char** argv) {
 	if (argc > 1) {
-		for (int i = 0; i < argc; i++) {
-			char* param = argv[i];
-			printf("%s\n", param);
+		char* param = argv[1];
+		if (strcmp(param,"-i") == 0) {
+			if (argc == 2) {
+				printf("lancement prog interactif\n");
+			}
+			else {
+				printf("trop d'argument pour le programme interactif\n");
+			}
+		}
+		else if (strcmp(param,"-f") == 0) {
+			if (argc == 3) {
+				printf("lancement prog fichier\n");
+			}
+			else {
+				printf("trop d'argument pour le programme fichier\n");
+			}
+		}
+		else {
+			printf("lancement prog command line\n");
 		}
 	}
 	else {
-		test();
+		return test();
 	}
 	return 0;
 }
 
-void test() {
+int test() {
 	printf("Start of the test\n");
 	int memorySize = 2000;
 	if (initMemory(memorySize) == -1) {
-		printf("Cannot init memory of %d bytes", memorySize);
+		printf("Cannot init memory of %d bytes\n", memorySize);
 		return 1;
 	}
 	printf("Memory Initialize\n");
@@ -72,13 +89,29 @@ void test() {
 	affTab(9, c);
 	printf("Fin affichage Tab\n");
 
+	printf("\nDebut affichage memoire\n");
+	displayMemory();
+	printf("Fin affichage memoire\n");
+
 	printf("\nDebut liberation memoire\n");
-	freeBlock(memory.listBlock);
-	affTab(5, memory.listBlock->contentPtr);
+	myFree(a);
+	printf("Fin liberation memoire\n");
+
+	printf("\nDebut affichage 2 memoire\n");
+	displayMemory();
+	printf("Fin affichage 2 memoire\n");
+
+	int *d = myAlloc(5 * sizeof(int));
+	for (int i = 0; i < 5; i++) {
+		d[i] = 20 * i;
+	}
+	printf("Block d Initialize\n");
+
+	affTab(5, a);
 
 	int res = myFree(c);
 	if (res == -1) {
-		perror("Error while freeing");
+		perror("Error while freeing\n");
 	}
 	else {
 		printf("%d\n", res);
@@ -88,4 +121,5 @@ void test() {
 	freeMemory();
 	//error testing
 	//int *d = myAlloc(2);
+	return 0;
 }

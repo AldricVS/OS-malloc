@@ -15,4 +15,10 @@ typedef struct myBlockCel {
 void *myAlloc(int nBytes);
 int myFree(void *contentPtr);
 
+int isSpaceSufficient(char *begin, char *end, int nBytes);
+unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock);
+void *searchValidSpace(int nBytes, MyBlock *previousBlock);
+
+void displayBlock(MyBlock block);
+
 #endif

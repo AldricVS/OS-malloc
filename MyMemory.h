@@ -13,10 +13,14 @@ typedef struct mymemory{
 }MyMemory;
 
 int initMemory(int nBytes);
+void displayMemory();
+void clearListBlock();
 int freeMemory();
 
 void insertBlockHead(MyBlock *newBlock);
 void insertBlockAfter(MyBlock *newBlock, MyBlock previousBlock);
 void insertBlockTail(MyBlock *newBlock);
+void freeBlock(MyBlock block);
+MyBlock getNBlockInList(int nbBlock);
 
 #endif // MY_MEMORY_H
