@@ -18,7 +18,20 @@ void affTab(int nELts, int *tab) {
 	printf("\n");
 }
 
-int main() {
+int main(int argc, char** argv) {
+	if (argc > 1) {
+		for (int i = 0; i < argc; i++) {
+			char* param = argv[i];
+			printf("%s\n", param);
+		}
+	}
+	else {
+		test();
+	}
+	return 0;
+}
+
+void test() {
 	printf("Start of the test\n");
 	int memorySize = 2000;
 	if (initMemory(memorySize) == -1) {
@@ -53,7 +66,6 @@ int main() {
 	}
 	printf("Struct V Initialize\n");
 
-
 	affTab(10, a);
 	affTab(memory.listBlock->contentSize / sizeof(int), memory.listBlock->contentPtr);
 	affTab(15, b);
@@ -62,7 +74,6 @@ int main() {
 
 	printf("\nDebut liberation memoire\n");
 	freeBlock(memory.listBlock);
-
 	affTab(5, memory.listBlock->contentPtr);
 
 	int res = myFree(c);
@@ -77,6 +88,4 @@ int main() {
 	freeMemory();
 	//error testing
 	//int *d = myAlloc(2);
-
-	return 0;
 }

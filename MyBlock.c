@@ -74,8 +74,8 @@ void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
 
 void *myAlloc(int nBytes) {
 	if (memory.isFree == 1) {
-		perror("Error while allocating Block memory :\n\tMemory is not initialized");
-		exit(-1);
+		printf("Error while allocating Block memory :\n\tMemory is not initialized");
+		return NULL;
 	}
 
 	MyBlock previousBlock = NULL;
@@ -96,8 +96,8 @@ void *myAlloc(int nBytes) {
 			insertBlockAfter(&block, previousBlock);
 		}
 		if (block == NULL) {
-			perror("Error while allocating Block memory :\n\tBlock value is NULL\n");
-			exit(-1);
+			printf("Error while allocating Block memory :\n\tBlock value is NULL\n");
+			return NULL;
 		}
 		block->contentSize = nBytes;
 		// Let the space for the struct (pointer arithmetic)

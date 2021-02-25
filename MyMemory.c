@@ -75,8 +75,8 @@ void freeBlock(MyBlock block) {
 		//memory.listBlock = block->nextBlock;
 		sizeFreed = myFree(block->contentPtr);
 		if (sizeFreed != block->contentSize) {
-			perror("Error when freeing Block :\n\tReturning memory value do not match block size\n");
-			exit(-1);
+			printf("Error when freeing Block :\n\tReturning memory value do not match block size\n");
+			return;
 		}
 	}
 	else {
@@ -87,8 +87,8 @@ void freeBlock(MyBlock block) {
 			sizeFreed = myFree(block->contentPtr);
 			//previousBlock->nextBlock = block->nextBlock;
 			if (sizeFreed != block->contentSize) {
-				perror("Error when freeing Block :\n\tReturning memory value do not match block size\n");
-				exit(-1);
+				printf("Error when freeing Block :\n\tReturning memory value do not match block size\n");
+				return;
 			}
 		}
 	}
