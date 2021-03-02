@@ -46,6 +46,11 @@ int initMemory(int nBytes);
 void displayMemory();
 
 /**
+* Check if the memory is freed or not
+*/
+int isMemoryFree();
+
+/**
 * Removes all blocks previously added in the memory. So, clear the memory. 
 */
 void clearListBlock();
@@ -53,6 +58,7 @@ void clearListBlock();
 /**
 * Desallocate the array of bytes and set the "isFree" attribute if the memory to '0'.
 * This function must be called before exiting the program.
+* @return the number of bytes freed, or -1 if the memory was already free.
 */
 int freeMemory();
 

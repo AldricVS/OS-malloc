@@ -1,5 +1,6 @@
 #include "MyMemory.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 MyMemory memory;
 
@@ -31,6 +32,10 @@ void displayMemory() {
 		currentBlock = currentBlock->nextBlock;
 	}
 	printf("******\n");
+}
+
+int isMemoryFree() {
+	return memory.isFree;
 }
 
 void clearListBlock() {

@@ -1,9 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "MyMemory.h"
 #include "MyBlock.h"
+#include "FileReader.h"
 
 extern MyMemory memory;
 
@@ -26,26 +26,28 @@ int main(int argc, char** argv) {
 		char* param = argv[1];
 		if (strcmp(param,"-i") == 0) {
 			if (argc == 2) {
-				printf("lancement prog interactif\n");
+				printf("Lauching interactive version...\n");
 			}
 			else {
-				printf("trop d'argument pour le programme interactif\n");
+				printf("Too many arguments for the interactive version : require only 1 argument\n");
 			}
 		}
 		else if (strcmp(param,"-f") == 0) {
 			if (argc == 3) {
-				printf("lancement prog fichier\n");
+				printf("Lauching file version...\n");
+				executeFile(argv[2]);
 			}
 			else {
-				printf("Nombre d'arguments incorrects pour lancer la lecture du fichier\n");
-				printf("Attendu : -f [nomFichier]\n");
+				printf("Incorrect number of arguments to start reading the file\n");
+				printf("Expected : -f [fileName]\n");
 			}
 		}
 		else {
-			printf("lancement prog command line\n");
+			printf("Lauching command line version...\n");
 		}
 	}
 	else {
+		printf("Lauching test program...\n");
 		return test();
 	}
 	return 0;
@@ -55,7 +57,7 @@ int test() {
 	printf("======== Start of the test ========\n");
 	int memorySize = 2000;
 	if (initMemory(memorySize) == -1) {
-		printf("Cannot init memory of %d bytes\n", memorySize);
+		printf("Cannot initialize memory of %d bytes\n", memorySize);
 		return 1;
 	}
 	printf("Memory Initialize\n");

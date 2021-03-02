@@ -4,11 +4,22 @@
 /**
  * A block is an entity that will be in the memory.
  * His purpose is to hold data from allocated blocks and permit
- * to keep trace of them (when allocationg a new memory zone or freeing it)
+ * to keep trace of them (when allocationg a new memory zone or freeing it).
+ * This is a linked list-type structure.
  */
 typedef struct myBlockCel {
+	/**
+	* The size (in bytes) of the "allocated" space with myAlloc 
+	* (does not count the size of the block itself).
+	*/
 	unsigned int contentSize;
+	/**
+	* The pointer of the start of the "allocated" variable.
+	*/
 	void *contentPtr;
+	/**
+	* The next block in the list.
+	*/
 	struct myBlockCel *nextBlock;
 }*MyBlock;
 
