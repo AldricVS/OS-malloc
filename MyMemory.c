@@ -61,16 +61,19 @@ A tester ...
 */
 void insertBlockHead(MyBlock *newBlock) {
 	MyBlock firstBlock = memory.listBlock;
+	(*newBlock) = (void*)memory.array;
 	if (firstBlock != NULL) {
 		(*newBlock)->nextBlock = firstBlock;
 	}
-	(*newBlock) = memory.array;
+	else {
+		(*newBlock)->nextBlock = NULL;
+	}
 	memory.listBlock = *newBlock;
 }
 
 void insertBlockAfter(MyBlock *newBlock, MyBlock previousBlock) {
 	MyBlock afterBlock = previousBlock->nextBlock;
-	(*newBlock) = (char *)previousBlock->contentPtr + previousBlock->contentSize;
+	(*newBlock) = (void*)((char *)previousBlock->contentPtr + previousBlock->contentSize);
 	previousBlock->nextBlock = *newBlock;
 	(*newBlock)->nextBlock = afterBlock;
 }
@@ -86,7 +89,7 @@ void insertBlockTail(MyBlock *newBlock) {
 			lastBlock = nextBlock;
 			nextBlock = nextBlock->nextBlock;
 		}
-		(*newBlock) = (char *)lastBlock->contentPtr + lastBlock->contentSize;
+		(*newBlock) = (void*)((char *)lastBlock->contentPtr + lastBlock->contentSize);
 		lastBlock->nextBlock = *newBlock;
 		(*newBlock)->nextBlock = NULL;
 	}
@@ -94,7 +97,7 @@ void insertBlockTail(MyBlock *newBlock) {
 
 void freeBlock(MyBlock block) {
 	block->contentPtr = NULL;
-	free(block);
+	//free(block);
 }
 
 MyBlock getNBlockInList(int nbBlock) {

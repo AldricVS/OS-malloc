@@ -1,6 +1,7 @@
 #include "MyBlock.h"
 #include "MyMemory.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 extern MyMemory memory;
 
@@ -113,7 +114,7 @@ int myFree(void *ptr) {
 
 	int sizeFreed;
 	MyBlock currentBlock = memory.listBlock;
-	MyBlock previousBlock;
+	MyBlock previousBlock = NULL;
 
 	//if the first block is the right one, remove it directly
 	if (currentBlock->contentPtr == ptr) {
@@ -136,12 +137,12 @@ int myFree(void *ptr) {
 		sizeFreed = currentBlock->contentSize;
 		previousBlock->nextBlock = currentBlock->nextBlock;
 	}
-	freeBlock(currentBlock);
+	currentBlock->contentPtr = NULL;
 	return sizeFreed;
 }
 
 void displayBlock(MyBlock block) {
-	printf("\tBlock status :\n");
+	printf("\tBlock address : 0x%p\n", block->contentPtr);
 	printf("\tBlock size : %d", block->contentSize);
 	printf("\n");
 	printf("\t***\n");
