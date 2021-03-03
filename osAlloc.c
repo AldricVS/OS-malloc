@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 		}
 		else {
 			printf("Lauching command line version...\n");
+			//example of working program call : osAlloc -init 20000 -alloc 500 -alloc 10 -disp -desalloc 0 -disp -end
 			executeCliArgs(argc, argv);
 		}
 	}

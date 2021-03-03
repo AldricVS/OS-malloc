@@ -3,7 +3,6 @@
 #include "util.h"
 #include "MyMemory.h"
 #include <stdio.h>
-#include <ctype.h>
 #include <string.h>
 
 int executeArgument(int *argCounter, int argc, char **argv) {
@@ -29,13 +28,14 @@ int executeArgument(int *argCounter, int argc, char **argv) {
 			return 0;
 		}
 		else {
-			// Check if next parameter is a valid number (only the first digit)
+			// Check if next parameter is a valid number
 			char *secondArg = argv[*argCounter];
-			/*if (!isdigit(secondArg)) {
-				printf("The option \"%s\" is not a valid number\n", secondArg);
+			char *endPtr;
+			int num = (int)strtol(secondArg, &endPtr, 10);
+			if (*endPtr != '\0') {
+				printf("\"%s\" is not a valid number. Either you wrote an option that needs an number without the number, or the number is not valid\n", secondArg);
 				return 0;
-			}*/
-			int num = atoi(argv[*argCounter]);
+			}
 
 			// Check the remaining possible arguments
 			if (areStringsEquals(arg, "-init")) {
