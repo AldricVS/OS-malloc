@@ -1,3 +1,5 @@
+///@file myMemory.h
+
 #ifndef MY_MEMORY_H
 #define MY_MEMORY_H
 #include "MyBlock.h"
@@ -90,6 +92,10 @@ void insertBlockAfter(MyBlock *newBlock, MyBlock previousBlock);
 */
 void insertBlockTail(MyBlock *newBlock);
 
+/**
+* Free a specified block from the memory. 
+* It will assume that the block is in the memory's block list 
+*/
 void freeBlock(MyBlock block);
 
 /**
