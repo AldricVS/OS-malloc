@@ -30,10 +30,10 @@ void desallocBlock(int nbBlock) {
 	}
 	else {
 		if (myFree(wantedBlock->contentPtr) == -1) {
-			printf("Cannot free the block n %d\n", nbBlock);
+			printf("Cannot free the block number %d\n", nbBlock);
 		}
 		else {
-			printf("Free the block n %d:\n", nbBlock);
+			printf("Free the block number %d:\n", nbBlock);
 		}
 	}
 	
@@ -48,6 +48,6 @@ void clearMem() {
 		puts("Memory already freed");
 	}
 	else {
-		puts("Memory now free");
+		puts("Memory is now free");
 	}
 }

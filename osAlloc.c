@@ -4,6 +4,8 @@
 #include "MyMemory.h"
 #include "MyBlock.h"
 #include "FileReader.h"
+#include "CliReader.h"
+#include "util.h"
 
 extern MyMemory memory;
 
@@ -11,13 +13,6 @@ struct V {
 	int a;
 	char b;
 };
-
-void affTab(int nELts, int *tab) {
-	for (int i = 0; i < nELts; i++) {
-		printf("%d ", tab[i]);
-	}
-	printf("\n");
-}
 
 int test();
 
@@ -44,6 +39,7 @@ int main(int argc, char** argv) {
 		}
 		else {
 			printf("Lauching command line version...\n");
+			executeCliArgs(argc, argv);
 		}
 	}
 	else {
@@ -89,10 +85,10 @@ int test() {
 	puts("Struct V Initialized\n");
 
 	puts("Display all arrays content :");
-	affTab(10, a);
-	affTab(memory.listBlock->contentSize / sizeof(int), memory.listBlock->contentPtr);
-	affTab(15, b);
-	affTab(9, c);
+	displayArray(10, a);
+	displayArray(memory.listBlock->contentSize / sizeof(int), memory.listBlock->contentPtr);
+	displayArray(15, b);
+	displayArray(9, c);
 	printf("Fin affichage Tab\n");
 
 	printf("\nDisplay memory with arrays a, b, c & v\n");
@@ -111,7 +107,7 @@ int test() {
 	}
 	printf("Block d Initialized\n");
 
-	affTab(5, a);
+	displayArray(5, a);
 
 	int res = myFree(c);
 	if (res == -1) {

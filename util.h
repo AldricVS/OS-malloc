@@ -14,4 +14,11 @@
 */
 int areStringsEquals(char *string1, char *string2);
 
+/**
+* Display an array of integers.
+* @param nElts the number of elements in the array
+* @tab the array to display
+*/
+void displayArray(int nELts, int *tab);
+
 #endif // !UTIL_H
