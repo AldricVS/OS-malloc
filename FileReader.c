@@ -28,9 +28,9 @@ void executeFile(char *path) {
 		while (fgets(buffer, FILE_BUFFER_SIZE, file) != NULL) {
 			removeNewLineFromString(buffer);
 			// Try to read a string and a number, but the number is not needed for commands
-			// such as "disp" or "end", so the parametersCount checks the number of arguments 
+			// such as "disp" or "end", so the parametersCount checks the number of arguments
 			// effectively red.
-			parametersCount = sscanf(buffer, "%s %d", &command, &value);
+			parametersCount = sscanf(buffer, "%s %d", command, &value);
 			// If parametersCount is 0, we skip this line
 			if (parametersCount < 1) {
 				printf("Cannot read line %d", lineCounter);

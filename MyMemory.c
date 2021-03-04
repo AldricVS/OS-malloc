@@ -5,11 +5,13 @@
 MyMemory memory;
 
 int initMemory(int nBytes) {
+	///check if memory isn't already in use
 	if ((memory.array != NULL) && (memory.isFree != 1)) {
 		printf("Memory is already created\n");
 		printf("Size of current memory: %d\n", memory.size);
 		return -1;
 	}
+	///check if the asked amount of bytes at least enough to store an int
 	if (nBytes < sizeof(struct myBlockCel) + 4) {
 		printf("Memory size is too small\n");
 		return -1;
@@ -35,6 +37,7 @@ void displayMemory() {
 	printf("\tIs memory free : %s\n", memory.isFree?"true":"false");
 	printf("\n");
 	printf("List of Block contained :\n");
+
 	MyBlock currentBlock = memory.listBlock;
 	while (currentBlock != NULL) {
 		displayBlock(currentBlock);
@@ -57,6 +60,11 @@ void clearListBlock() {
 }
 
 void defragMemory() {
+	if (isMemoryFree()) {
+		printf("Impossible to defragment memory :\n\tMemory is free\n");
+		return;
+	}
+	MyBlock currentBlock = memory.listBlock;
 }
 
 int freeMemory() {
