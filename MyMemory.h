@@ -58,6 +58,11 @@ int isMemoryFree();
 void clearListBlock();
 
 /**
+* Restructures the memory area so that all the blocks are side by side.
+*/
+void defragMemory();
+
+/**
 * Desallocate the array of bytes and set the "isFree" attribute if the memory to '0'.
 * This function must be called before exiting the program.
 * @return the number of bytes freed, or -1 if the memory was already free.
