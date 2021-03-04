@@ -56,6 +56,9 @@ void clearListBlock() {
 	}
 }
 
+void defragMemory() {
+}
+
 int freeMemory() {
 	// We can't free memory multiple times
 	if (memory.isFree) {

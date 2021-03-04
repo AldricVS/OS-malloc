@@ -19,6 +19,7 @@ unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock) {
 }
 
 void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
+	
 	// If there is no block now
 	if (memory.listBlock == NULL) {
 		char *memoryStart = memory.array;
