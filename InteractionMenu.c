@@ -16,12 +16,16 @@ void showMenu() {
 
 void interactionLoop() {
     int condition = 0;
-    int choice, option = 0;
-    // While user want to continue to "play"
+    int choice, option;
+    /// While user doesn't choose to quit
     while (condition == 0) {
-
+		///Show all avaible option to the user
         showMenu();
+		///default choice : display (only option without any modification to the memory)
+		choice = 4;
+		///reset of option
         option = 0;
+
         printf("Make your choice: ");
         scanf("%d", &choice);
         // Flush the std input in order to don't read other characters
@@ -57,7 +61,7 @@ void interactionLoop() {
 			condition = 1;
 			break;
         default:
-            printf("\nUnknown value, please a number between 1 and 6\n");
+            printf("\nUnknown value : please a number between 1 and 6\n");
         }
         // second flush needed sometimes (when 2 input are needed)
         fseek(stdin, 0, SEEK_END);
