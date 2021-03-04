@@ -16,14 +16,16 @@ void showMenu() {
 
 void interactionLoop() {
     int condition = 0;
+    int choice, option = 0;
+    // While user want to continue to "play"
     while (condition == 0) {
 
         showMenu();
-
-        int choice, option = 0;
-
+        option = 0;
         printf("Make your choice: ");
         scanf("%d", &choice);
+        // Flush the std input in order to don't read other characters
+        fseek(stdin, 0, SEEK_END);
         printf("\n");
 
         switch(choice) {
@@ -57,6 +59,8 @@ void interactionLoop() {
         default:
             printf("\nValeur incorrect, utiliser uniquement un chiffre entre 1 et 5\n");
         }
+        // second flush needed sometimes (when 2 input are needed)
+        fseek(stdin, 0, SEEK_END);
     }
 }
 
