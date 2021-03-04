@@ -57,7 +57,7 @@ void interactionLoop() {
 			condition = 1;
 			break;
         default:
-            printf("\nValeur incorrect, utiliser uniquement un chiffre entre 1 et 5\n");
+            printf("\nUnknown value, please a number between 1 and 6\n");
         }
         // second flush needed sometimes (when 2 input are needed)
         fseek(stdin, 0, SEEK_END);
