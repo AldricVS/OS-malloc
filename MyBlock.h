@@ -1,3 +1,5 @@
+///@file myBlock.h
+
 #ifndef MY_BLOCK_H
 #define MY_BLOCK_H
 
@@ -9,7 +11,7 @@
  */
 typedef struct myBlockCel {
 	/**
-	* The size (in bytes) of the "allocated" space with myAlloc 
+	* The size (in bytes) of the "allocated" space with myAlloc
 	* (does not count the size of the block itself).
 	*/
 	unsigned int contentSize;

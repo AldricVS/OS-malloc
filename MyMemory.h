@@ -17,7 +17,7 @@ typedef struct mymemory {
 	*/
 	unsigned int size;
 	/**
-	* isFree permits to know if the memory was correctly initialized. 
+	* isFree permits to know if the memory was correctly initialized.
 	* Before using "initMemory", the value of this variable is unknown.
 	*/
 	int isFree;
@@ -26,7 +26,7 @@ typedef struct mymemory {
 	*/
 	char *array;
 	/**
-	* listBlock represent the address of the first block of the memory array. 
+	* listBlock represent the address of the first block of the memory array.
 	* This is not certain that this block is on the very begining of the memory (mostly if the first block is removed and no realloc was done).
 	*/
 	struct myBlockCel *listBlock;
@@ -53,7 +53,7 @@ void displayMemory();
 int isMemoryFree();
 
 /**
-* Removes all blocks previously added in the memory. So, clear the memory. 
+* Removes all blocks previously added in the memory. So, clear the memory.
 */
 void clearListBlock();
 
@@ -68,8 +68,8 @@ int freeMemory();
 //======= HELPERS FUNCTIONS ========//
 
 /**
-* Insert a block at the very beginning of the memory. 
-* This only must be done if there is enough space between 
+* Insert a block at the very beginning of the memory.
+* This only must be done if there is enough space between
 * the start of the memory array and the current first block.
 * @param newBlock the block to add
 */
@@ -93,15 +93,15 @@ void insertBlockAfter(MyBlock *newBlock, MyBlock previousBlock);
 void insertBlockTail(MyBlock *newBlock);
 
 /**
-* Free a specified block from the memory. 
-* It will assume that the block is in the memory's block list 
+* Free a specified block from the memory.
+* It will assume that the block is in the memory's block list
 */
 void freeBlock(MyBlock block);
 
 /**
 * Try to get the nth block of the list of blocks (with n starting from 0).
 * @param nbBlock the position of the block in the list
-* @return the block at the given position, or NULL if the number of blocks in the list is too small  
+* @return the block at the given position, or NULL if the number of blocks in the list is too small
 */
 MyBlock getNBlockInList(int nbBlock);
 

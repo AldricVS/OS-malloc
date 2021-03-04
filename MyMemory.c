@@ -5,6 +5,15 @@
 MyMemory memory;
 
 int initMemory(int nBytes) {
+	if ((memory.array != NULL) && (memory.isFree != 1)) {
+		printf("Memory is already created\n");
+		printf("Size of current memory: %d\n", memory.size);
+		return -1;
+	}
+	if (nBytes < sizeof(struct myBlockCel) + 4) {
+		printf("Memory size is too small\n");
+		return -1;
+	}
 	// Allocate nBytes bytes (char == 1 byte)
 	void *ptr = malloc(nBytes * sizeof(char));
 	if (ptr == NULL) {
@@ -103,6 +112,7 @@ void insertBlockTail(MyBlock *newBlock) {
 void freeBlock(MyBlock block) {
 	block->contentPtr = NULL;
 	//free(block);
+	block = NULL;
 }
 
 MyBlock getNBlockInList(int nbBlock) {

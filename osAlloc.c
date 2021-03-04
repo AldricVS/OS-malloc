@@ -3,6 +3,7 @@
 #include <string.h>
 #include "MyMemory.h"
 #include "MyBlock.h"
+#include "InteractionMenu.h"
 #include "FileReader.h"
 #include "CliReader.h"
 #include "util.h"
@@ -22,6 +23,7 @@ int main(int argc, char** argv) {
 		if (strcmp(param,"-i") == 0) {
 			if (argc == 2) {
 				printf("Lauching interactive version...\n");
+				interactionLoop();
 			}
 			else {
 				printf("Too many arguments for the interactive version : require only 1 argument\n");
@@ -60,8 +62,8 @@ int test() {
 	printf("Memory Initialize\n");
 
 	//no errors in myAlloc for now
-	int *a = myAlloc(10 * sizeof(int));
-	for (int i = 0; i < 10; i++) {
+	int *a = myAlloc(12 * sizeof(int));
+	for (int i = 0; i < 12; i++) {
 		a[i] = i;
 	}
 	printf("Block a Initialized\n");
@@ -120,6 +122,11 @@ int test() {
 	}
 
 	printf("\nDisplay memory with arrays in order : d (size : 5 bytes), b (size : 15 bytes)\n");
+	displayMemory();
+
+	printf("Insert memory e, of size 4 between d and b\n");
+	int *e = myAlloc(sizeof(int));
+	*e = 2;
 	displayMemory();
 
 	freeMemory();
