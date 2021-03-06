@@ -29,7 +29,9 @@ void *myAlloc(int nBytes);
 int myFree(void *contentPtr);
 
 int isSpaceSufficient(char *begin, char *end, int nBytes);
+int spaceBetweenTwoPtrs(char *begin, char *end);
 unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock);
+void *searchBestSpace(int nBytes, MyBlock *previousBlock);
 void *searchValidSpace(int nBytes, MyBlock *previousBlock);
 
 void displayBlock(MyBlock block);
