@@ -81,10 +81,25 @@ unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock);
  * in order to get enough space to put the block.
  * 
  * @param nBytes the size in bytes 
+ * @param previousBlock this is an output parameter, in order to have the info on the block who will precede the future one.
+ * @return a pointer to a valid space that can be allocated
  */
 void *searchBestSpace(int nBytes, MyBlock *previousBlock);
+
+/**
+ * Search in memory the first place where a memory of nBytes can be put.
+ * 
+ * @param nBytes the size in bytes 
+ * @param previousBlock this is an output parameter, in order to have the info on the block who will precede the future one.
+ * @return a pointer to a valid space that can be allocated
+ */
 void *searchValidSpace(int nBytes, MyBlock *previousBlock);
 
+/**
+ * Display the data of a block : the pointer and the size of the content of the block.
+ * 
+ * @param block the block to display
+ */
 void displayBlock(MyBlock block);
 
 #endif
