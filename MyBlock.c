@@ -2,6 +2,7 @@
 #include "MyMemory.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 
 extern MyMemory memory;
 
@@ -11,6 +12,10 @@ int isSpaceSufficient(char *begin, char *end, int nBytes) {
 	return spaceBetween >= nBytes + sizeof(struct myBlockCel);
 }
 
+int spaceBetweenTwoPtrs(char *begin, char *end) {
+	return end - begin - sizeof(struct myBlockCel);
+}
+
 unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock) {
 	// Get the end of the first block allocated memory
 	char *firstBlockEnd = (char *)firstBlock->contentPtr + firstBlock->contentSize;
@@ -18,8 +23,93 @@ unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock) {
 	return seconfBlockBegin - firstBlockEnd;
 }
 
+void *searchBestSpace(int nBytes, MyBlock *previousBlock) {
+	int totalSpaceAvailable = 0;
+	int minSpaceSizeAvailable = INT_MAX;
+	void *validSpacePtr = NULL;
+
+	// If there is no block now
+	if (memory.listBlock == NULL) {
+		char *memoryStart = memory.array;
+		char *memoryEnd = memoryStart + memory.size;
+		if (isSpaceSufficient(memoryStart, memoryEnd, nBytes)) {
+			// There is no previous block for this new block
+			*previousBlock = NULL;
+			return memoryStart;
+		}
+		else {
+			// Not enough space
+			return NULL;
+		}
+	}
+	else {
+		char *ptrBegin = memory.array;
+		char *ptrFirstBlock = (char *)memory.listBlock;
+		if (ptrBegin != ptrFirstBlock) {
+			totalSpaceAvailable += ptrFirstBlock - ptrBegin;
+			// If we can put the new block at the beginning of the memory
+			if (isSpaceSufficient(ptrBegin, ptrFirstBlock, nBytes)) {
+				// This is our first possible space
+				minSpaceSizeAvailable = spaceBetweenTwoPtrs(ptrBegin, ptrFirstBlock);
+				previousBlock = NULL;
+				validSpacePtr = ptrBegin;
+			}
+		}
+		// Continue the research
+		MyBlock block = memory.listBlock;
+		MyBlock blockAfter = block->nextBlock;
+		char *firstBlockEnd;
+		char *secondBlockBegin;
+		while (blockAfter != NULL) {
+			// If the space between first block end and second block begin is sufficient,
+			// compare with the previous min size possible
+			firstBlockEnd = (char *)block->contentPtr + block->contentSize;
+			secondBlockBegin = (char *)blockAfter;
+			totalSpaceAvailable += secondBlockBegin - firstBlockEnd;
+			if (firstBlockEnd != secondBlockBegin && isSpaceSufficient(firstBlockEnd, secondBlockBegin, nBytes)) {
+				int space = spaceBetweenTwoBlocks(block, blockAfter);
+				if (space < minSpaceSizeAvailable) {
+					minSpaceSizeAvailable = space;
+					*previousBlock = block;
+					validSpacePtr = firstBlockEnd;
+				}
+			}
+			block = blockAfter;
+			blockAfter = blockAfter->nextBlock;
+		}
+		// Finally, search between the last block and the end of the memory
+		// Here, firstBLock is the lastBlock of the memory
+		firstBlockEnd = (char *)block->contentPtr + block->contentSize;
+		char *endMemoryPtr = memory.array + memory.size;
+		totalSpaceAvailable += endMemoryPtr - firstBlockEnd;
+		if (isSpaceSufficient(firstBlockEnd, endMemoryPtr, nBytes)) {
+			int space = spaceBetweenTwoPtrs(firstBlockEnd, endMemoryPtr);
+			if (space < minSpaceSizeAvailable) {
+				minSpaceSizeAvailable = space;
+				*previousBlock = block;
+				validSpacePtr = firstBlockEnd;
+			}
+		}
+	}
+	// Here, the validSpacePtr can be NULL, but we can still have enough space to insert the block
+	// if it is the case, we compress all blocks
+	if (validSpacePtr == NULL) {
+		if (totalSpaceAvailable >= nBytes + sizeof(MyBlock)) {
+			//TODO : call the compress function
+			return NULL;
+		}
+		else {
+			return NULL;
+		}
+	}
+	return validSpacePtr;
+}
+
 void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
-	
+	int totalSpaceAvailable = 0;
+	int minSpaceSizeAvailable = INT_MAX;
+	void *validSpacePtr = NULL;
+
 	// If there is no block now
 	if (memory.listBlock == NULL) {
 		char *memoryStart = memory.array;
@@ -81,7 +171,7 @@ void *myAlloc(int nBytes) {
 	}
 
 	MyBlock previousBlock = NULL;
-	void *blockPtr = searchValidSpace(nBytes, &previousBlock);
+	void *blockPtr = searchBestSpace(nBytes, &previousBlock);
 	if (blockPtr == NULL) {
 		return NULL;
 	}
