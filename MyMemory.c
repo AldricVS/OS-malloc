@@ -65,6 +65,17 @@ void defragMemory() {
 		return;
 	}
 	MyBlock currentBlock = memory.listBlock;
+	if ((char*)currentBlock != memory.array) {
+		//the first block isn't at the start of the memory
+		moveBlockInMemory(memory.array, currentBlock);
+	}
+	MyBlock previousBlock = currentBlock;
+	while ((currentBlock = currentBlock->nextBlock) != NULL) {
+		//move all other block in memory
+		void* ptrNextMemory = previousBlock->contentPtr + previousBlock->contentSize;
+		moveBlockInMemory(ptrNextMemory, currentBlock);
+		previousBlock = currentBlock;
+	}
 }
 
 int freeMemory() {

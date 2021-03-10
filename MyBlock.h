@@ -29,21 +29,29 @@ typedef struct myBlockCel {
  * Implementation of the "malloc" function in the context of the project.
  * This will try to find the best valid position in memory (previously initialized)
  * that can holds the new allocated memory. If there is currently not any space where to
- * put the block, but that there is enough space in all memory to hold it, the function 
+ * put the block, but that there is enough space in all memory to hold it, the function
  * will call "deragMemory".
- * 
+ *
  * @param nBytes the number of bytes to allocate
- * @return the pointer of the new "allocated" memory, or NULL if cannot be created (not enough space).   
+ * @return the pointer of the new "allocated" memory, or NULL if cannot be created (not enough space).
  * @see defragMemory()
  */
 void *myAlloc(int nBytes);
 
 /**
+ * Move a block inside the memory to the new specified space
+ *
+ * \param newMemoryPtr the new space inside the memory where the block will be set
+ * \param movingBlock the Block that is being moved.
+ */
+void moveBlockInMemory(void* newMemoryPtr, MyBlock movingBlock);
+
+/**
  * Desallocate a previously allocated block in the memory (an array for example).
  * It will remove the block containing the data from the block list.
- * @param contentPtr the pointer of the allocated zone. 
+ * @param contentPtr the pointer of the allocated zone.
  * 		This is also the "contentPtr" attribute of the "MyBlock" structure.
- * @return the number of bytes freed, or -1 if the operation failed 
+ * @return the number of bytes freed, or -1 if the operation failed
  * 		(this can be because the contentPtr cannot be found for example).
  */
 int myFree(void *contentPtr);
@@ -51,11 +59,11 @@ int myFree(void *contentPtr);
 /**
  * Check if there is enough space between two pointers in order to put a block of memory.
  * It also take account of the size of the block data structure.
- * @param begin the pointer to the begin of the area  
- * @param end the pointer to the end of the area  
- * @param nBytes the number of bytes needed  
- * @return a boolean value showing if there is enough space or not 
- */ 
+ * @param begin the pointer to the begin of the area
+ * @param end the pointer to the end of the area
+ * @param nBytes the number of bytes needed
+ * @return a boolean value showing if there is enough space or not
+ */
 int isSpaceSufficient(char *begin, char *end, int nBytes);
 
 /**
@@ -76,11 +84,11 @@ unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock);
 
 /**
  * Search in all memory the best place where to put a memory block of nBytes.
- * The best place is the smallest space between all memory blocks that 
- * If needed, this function can call "defragMemory()" 
+ * The best place is the smallest space between all memory blocks that
+ * If needed, this function can call "defragMemory()"
  * in order to get enough space to put the block.
- * 
- * @param nBytes the size in bytes 
+ *
+ * @param nBytes the size in bytes
  * @param previousBlock this is an output parameter, in order to have the info on the block who will precede the future one.
  * @return a pointer to a valid space that can be allocated
  */
@@ -88,8 +96,8 @@ void *searchBestSpace(int nBytes, MyBlock *previousBlock);
 
 /**
  * Search in memory the first place where a memory of nBytes can be put.
- * 
- * @param nBytes the size in bytes 
+ *
+ * @param nBytes the size in bytes
  * @param previousBlock this is an output parameter, in order to have the info on the block who will precede the future one.
  * @return a pointer to a valid space that can be allocated
  */
@@ -97,7 +105,7 @@ void *searchValidSpace(int nBytes, MyBlock *previousBlock);
 
 /**
  * Display the data of a block : the pointer and the size of the content of the block.
- * 
+ *
  * @param block the block to display
  */
 void displayBlock(MyBlock block);

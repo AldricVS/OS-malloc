@@ -197,6 +197,14 @@ void *myAlloc(int nBytes) {
 	}
 }
 
+void moveBlockInMemory(void* newMemoryPtr, MyBlock movingBlock) {
+	int sizeOfBlock = sizeof(MyBlock);
+	int totalSizeOfBlock = sizeOfBlock + movingBlock->contentSize;
+	for (int i = 0; i < totalSizeOfBlock; i++) {
+		memory.array[i] = ((char*)movingBlock)[i];
+	}
+}
+
 int myFree(void *ptr) {
 	// If no memory is allocated yet
 	if (memory.listBlock == NULL) {
