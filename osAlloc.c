@@ -134,7 +134,9 @@ int test() {
 
 	printf("Move block e after block b\n");
 	int blockSize = sizeof(MyBlock);
-	moveBlockInMemory(b+blockBSize, (MyBlock)e-blockSize);
+	printf("Debug : block size = %d\n", blockSize);
+	printf("Debug : e block address = %p\n", e-blockSize+2);
+	moveBlockInMemory((char*)b+blockBSize+blockSize, (MyBlock)(e-blockSize));
 	displayMemory();
 
 	freeMemory();

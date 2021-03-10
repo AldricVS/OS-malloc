@@ -203,12 +203,14 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		printf("Error : Trying to move the block to the same location\n");
 		return;
 	}
-	///Search in the list a new place for the  block
+	///Search in memory list the last known place of the block
 	MyBlock currentBlock = memory.listBlock;
 	MyBlock previousBlock = NULL;
+	printf("Debug : current block address = %p\n", currentBlock);
 	while ((currentBlock != NULL) && (currentBlock != movingBlock)){
-		currentBlock = currentBlock.nextBlock;
 		previousBlock = currentBlock;
+		currentBlock = currentBlock->nextBlock;
+		printf("Debug : current block address = %p\n", currentBlock);
 	}
 	///Error check
 	if ((previousBlock == NULL) && (currentBlock != movingBlock)) {
@@ -225,14 +227,13 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 	currentBlock = memory.listBlock;
 	previousBlock = NULL;
 	while ((currentBlock != NULL) && (currentBlock < newMemoryPtr)){
-		currentBlock = currentBlock.nextBlock;
+		currentBlock = currentBlock->nextBlock;
 		previousBlock = currentBlock;
 	}
-	///Error check
+	///NULL check
 	if (currentBlock == NULL) {
 		previousBlock->nextBlock = movingBlock;
-		movingBlock->nextBlock = currentBlock;
-		currentBlock = movingBlock;
+		movingBlock->nextBlock = NULL;
 	}
 	else {
 		previousBlock->nextBlock = movingBlock;
