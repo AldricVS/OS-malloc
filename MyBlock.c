@@ -212,6 +212,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		currentBlock = currentBlock->nextBlock;
 		printf("Debug : current block address = %p\n", currentBlock);
 	}
+	printf("Debug : found block address = %p\n", currentBlock);
 	///Error check
 	if ((previousBlock == NULL) && (currentBlock != movingBlock)) {
 		printf("Error : No Block in the Memory list\n");
@@ -222,16 +223,26 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		return;
 	}
 	///change the previous's next block
+	printf("Debug : change previous...\n");
 	previousBlock->nextBlock = currentBlock->nextBlock;
 	///search a good new place for the block
+	printf("Debug : new address for our block = %p\n", newMemoryPtr);
+	printf("Debug : searching ...\n");
 	currentBlock = memory.listBlock;
 	previousBlock = NULL;
 	while ((currentBlock != NULL) && (currentBlock < newMemoryPtr)){
-		currentBlock = currentBlock->nextBlock;
 		previousBlock = currentBlock;
+		currentBlock = currentBlock->nextBlock;
 	}
+	printf("Debug : found new block address = %p\n", currentBlock);
+	printf("Debug : previous new block address = %p\n", previousBlock);
 	///NULL check
+	if (previousBlock == NULL) {
+		printf("Error : couldn't retrieve a block in memory list\n");
+		return;
+	}
 	if (currentBlock == NULL) {
+		printf("Debug : NULL check\n");
 		previousBlock->nextBlock = movingBlock;
 		movingBlock->nextBlock = NULL;
 	}
@@ -240,6 +251,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		movingBlock->nextBlock = currentBlock;
 	}
 	///change the memory
+	printf("Debug : memory modification\n");
 	movingBlock->contentPtr = newMemoryPtr;
 	int sizeOfBlock = sizeof(MyBlock);
 	int totalSizeOfBlock = sizeOfBlock + movingBlock->contentSize;
