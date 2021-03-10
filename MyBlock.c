@@ -197,12 +197,55 @@ void *myAlloc(int nBytes) {
 	}
 }
 
-void moveBlockInMemory(void* newMemoryPtr, MyBlock movingBlock) {
+void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
+	///Check if we try to move in the same place
+	if (newMemoryPtr == (char*)movingBlock) {
+		printf("Error : Trying to move the block to the same location\n");
+		return;
+	}
+	///Search in the list a new place for the  block
+	MyBlock currentBlock = memory.listBlock;
+	MyBlock previousBlock = NULL;
+	while ((currentBlock != NULL) && (currentBlock != movingBlock)){
+		currentBlock = currentBlock.nextBlock;
+		previousBlock = currentBlock;
+	}
+	///Error check
+	if ((previousBlock == NULL) && (currentBlock != movingBlock)) {
+		printf("Error : No Block in the Memory list\n");
+		return;
+	}
+	if (currentBlock == NULL) {
+		printf("Error : Given Block couldn't be found inside the Memory list\n");
+		return;
+	}
+	///change the previous's next block
+	previousBlock->nextBlock = currentBlock->nextBlock;
+	///search a good new place for the block
+	currentBlock = memory.listBlock;
+	previousBlock = NULL;
+	while ((currentBlock != NULL) && (currentBlock < newMemoryPtr)){
+		currentBlock = currentBlock.nextBlock;
+		previousBlock = currentBlock;
+	}
+	///Error check
+	if (currentBlock == NULL) {
+		previousBlock->nextBlock = movingBlock;
+		movingBlock->nextBlock = currentBlock;
+		currentBlock = movingBlock;
+	}
+	else {
+		previousBlock->nextBlock = movingBlock;
+		movingBlock->nextBlock = currentBlock;
+	}
+	///change the memory
+	movingBlock->contentPtr = newMemoryPtr;
 	int sizeOfBlock = sizeof(MyBlock);
 	int totalSizeOfBlock = sizeOfBlock + movingBlock->contentSize;
 	for (int i = 0; i < totalSizeOfBlock; i++) {
-		memory.array[i] = ((char*)movingBlock)[i];
+		newMemoryPtr[i] = ((char*)movingBlock)[i];
 	}
+
 }
 
 int myFree(void *ptr) {

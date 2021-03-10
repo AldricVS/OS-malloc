@@ -44,7 +44,7 @@ void *myAlloc(int nBytes);
  * \param newMemoryPtr the new space inside the memory where the block will be set
  * \param movingBlock the Block that is being moved.
  */
-void moveBlockInMemory(void* newMemoryPtr, MyBlock movingBlock);
+void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock);
 
 /**
  * Desallocate a previously allocated block in the memory (an array for example).

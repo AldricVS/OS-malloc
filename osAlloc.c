@@ -61,20 +61,22 @@ int test() {
 	}
 	printf("Memory Initialize\n");
 
-	//no errors in myAlloc for now
-	int *a = myAlloc(12 * sizeof(int));
+	int blockASize = 12 * sizeof(int);
+	int *a = myAlloc(blockASize);
 	for (int i = 0; i < 12; i++) {
 		a[i] = i;
 	}
 	printf("Block a Initialized\n");
 
-	int *b = myAlloc(15 * sizeof(int));
+	int blockBSize = 15 * sizeof(int);
+	int *b = myAlloc(blockBSize);
 	for (int i = 0; i < 15; i++) {
 		b[i] = i * 3;
 	}
 	printf("Block b Initialized\n");
 
-	int *c = myAlloc(9 * sizeof(int));
+	int blockCSize = 9 * sizeof(int);
+	int *c = myAlloc(blockCSize);
 	for (int i = 0; i < 9; i++) {
 		c[i] = i - 2;
 	}
@@ -104,7 +106,8 @@ int test() {
 	printf("\nMemory without array a :\n");
 	displayMemory();
 
-	int *d = myAlloc(5 * sizeof(int));
+	int blockDSize = 5 * sizeof(int);
+	int *d = myAlloc(blockDSize);
 	for (int i = 0; i < 5; i++) {
 		d[i] = 20 * i;
 	}
@@ -124,9 +127,14 @@ int test() {
 	printf("\nDisplay memory with arrays in order : d (size : 5 bytes), b (size : 15 bytes)\n");
 	displayMemory();
 
-	printf("Insert memory e, of size 4 between d and b\n");
+	printf("Insert block e, of size 4 between d and b\n");
 	int *e = myAlloc(sizeof(int));
 	*e = 2;
+	displayMemory();
+
+	printf("Move block e after block b\n");
+	int blockSize = sizeof(MyBlock);
+	moveBlockInMemory(b+blockBSize, (MyBlock)e-blockSize);
 	displayMemory();
 
 	freeMemory();
