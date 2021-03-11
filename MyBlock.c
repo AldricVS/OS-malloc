@@ -226,7 +226,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock *movingBlock) {
 	printf("Debug : searching ...\n");
 	currentBlock = memory.listBlock;
 	previousBlock = NULL;
-	while ((currentBlock != NULL) && (currentBlock < newMemoryPtr)){
+	while ((currentBlock != NULL) && ((char*)currentBlock < newMemoryPtr)){
 		previousBlock = currentBlock;
 		currentBlock = currentBlock->nextBlock;
 	}
@@ -244,7 +244,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock *movingBlock) {
 	for (int i = 0; i < totalSizeOfBlock; i++) {
 		newMemoryPtr[i] = ((char *)movingBlock)[i];
 	}
-	movingBlock = newMemoryPtr;
+	movingBlock = (MyBlock*)newMemoryPtr;
 	if (currentBlock == NULL) {
 		printf("Debug : NULL check\n");
 		previousBlock->nextBlock = *movingBlock;
