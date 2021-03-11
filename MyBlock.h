@@ -39,14 +39,6 @@ typedef struct myBlockCel {
 void *myAlloc(int nBytes);
 
 /**
- * Move a block inside the memory to the new specified space
- *
- * \param newMemoryPtr the new space inside the memory where the block will be set
- * \param movingBlock the Block that is being moved.
- */
-void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock);
-
-/**
  * Desallocate a previously allocated block in the memory (an array for example).
  * It will remove the block containing the data from the block list.
  * @param contentPtr the pointer of the allocated zone.
@@ -95,6 +87,7 @@ unsigned int spaceBetweenTwoBlocks(MyBlock firstBlock, MyBlock secondBlock);
 void *searchBestSpace(int nBytes, MyBlock *previousBlock);
 
 /**
+ * @deprecated This function is not used anymore, better use searchBestSpace in order to avoid fragmentation. 
  * Search in memory the first place where a memory of nBytes can be put.
  *
  * @param nBytes the size in bytes
@@ -109,5 +102,14 @@ void *searchValidSpace(int nBytes, MyBlock *previousBlock);
  * @param block the block to display
  */
 void displayBlock(MyBlock block);
+
+/**
+ * Move a block inside the memory to the new specified space
+ * \deprecated This function is not used by any other functions, and it is dangerous to use it alone.
+ *
+ * \param newMemoryPtr the new space inside the memory where the block will be set
+ * \param movingBlock the Block that is being moved.
+ */
+void moveBlockInMemory(char *newMemoryPtr, MyBlock *movingBlock);
 
 #endif

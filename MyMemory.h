@@ -59,6 +59,10 @@ void clearListBlock();
 
 /**
 * Restructures the memory area so that all the blocks are side by side.
+* 
+* @deprecated After a defrag, the previously declared pointers in program 
+*	will not point towards the right place in memory. 
+*	This function avoids fragmentation but cannot be used in normal conditions.
 */
 void defragMemory();
 
@@ -109,5 +113,10 @@ void freeBlock(MyBlock block);
 * @return the block at the given position, or NULL if the number of blocks in the list is too small
 */
 MyBlock getNBlockInList(int nbBlock);
+
+/**
+* Move an entire block to another place in the memory. This function overwrite any data that was previously stored at the space.
+*/
+void moveBlock(MyBlock *blockToMove, char *destination);
 
 #endif // MY_MEMORY_H
