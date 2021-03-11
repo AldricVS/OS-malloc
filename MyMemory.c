@@ -66,7 +66,7 @@ void moveBlock(MyBlock *blockToMove, char *destination) {
 	for (int i = 0; i < spaceToCopy; i++) {
 		destination[i] = data[i];
 	}
-	*blockToMove = destination;
+	*blockToMove = (MyBlock)destination;
 	// Move also the content pointer
 	(*blockToMove)->contentPtr = destination + sizeof(MyBlock);
 }
@@ -80,7 +80,6 @@ void defragMemory() {
 		printf("Cannot defrag memory : No memory block is curently allocated\n");
 		return;
 	}
-	void *endBlockPtr = NULL;
 	// Check first block that is right to the beginning
 	MyBlock block = memory.listBlock;
 	if ((char*)block > memory.array) {
@@ -92,9 +91,7 @@ void defragMemory() {
 	block = block->nextBlock;
 	while (block != NULL) {
 		char *endPreviousBlockPtr = (char *)previousBlock->contentPtr + previousBlock->contentSize;
-		int index = endPreviousBlockPtr - memory.array;
 		char *blockBeginPtr = (char *)block;
-		index = blockBeginPtr - memory.array;
 		if (endPreviousBlockPtr != blockBeginPtr) {
 			moveBlock(&block, endPreviousBlockPtr);
 			previousBlock->nextBlock = (MyBlock)endPreviousBlockPtr;

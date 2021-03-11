@@ -100,10 +100,6 @@ void *searchBestSpace(int nBytes, MyBlock *previousBlock) {
 }
 
 void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
-	int totalSpaceAvailable = 0;
-	int minSpaceSizeAvailable = INT_MAX;
-	void *validSpacePtr = NULL;
-
 	// If there is no block now
 	if (memory.listBlock == NULL) {
 		char *memoryStart = memory.array;
