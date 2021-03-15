@@ -228,7 +228,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		previousBlock->nextBlock = currentBlock->nextBlock;
 	}
 	///search a good new place for the block
-	printf("Debug : new address for our block = %p\n", newMemoryPtr);
+	printf("\nDebug : new address for our block = %p\n", newMemoryPtr);
 	printf("Debug : searching ...\n");
 	currentBlock = memory.listBlock;
 	previousBlock = NULL;
@@ -236,16 +236,16 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		previousBlock = currentBlock;
 		currentBlock = currentBlock->nextBlock;
 	}
-	printf("Debug : found new block address = %p\n", currentBlock);
+	printf("\nDebug : found new block address = %p\n", currentBlock);
 	printf("Debug : previous new block address = %p\n", previousBlock);
 	///NULL check
 	if (previousBlock == NULL) {
-			/// a changer : mettre le block en début de memoire
+		/// a changer : mettre le block en début de memoire
 		printf("Error : couldn't retrieve a block in memory list\n");
 		return;
 	}
 	if (currentBlock == NULL) {
-		printf("Debug : NULL check\n");
+		printf("Debug : currentBlock NULL check -> Block will be last in list\n");
 		previousBlock->nextBlock = movingBlock;
 		movingBlock->nextBlock = NULL;
 	}
@@ -260,8 +260,8 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 	for (int i = 0; i < totalSizeOfBlock; i++) {
 		newMemoryPtr[i] = ((char*)movingBlock)[i];
 	}
-	movingBlock = newMemoryPtr;
 	movingBlock->contentPtr = newMemoryPtr+sizeOfBlock;
+	movingBlock = newMemoryPtr;
 
 }
 
