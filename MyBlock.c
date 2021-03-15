@@ -237,20 +237,21 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock *movingBlock) {
 
 	if (currentBlock == NULL) {
 		printf("Debug : currentBlock NULL check -> Block will be last in list\n");
-		previousBlock->nextBlock = movingBlock;
-		movingBlock->nextBlock = NULL;
+		previousBlock->nextBlock = *movingBlock;
+		(*movingBlock)->nextBlock = NULL;
 	}
 	else {
-		previousBlock->nextBlock = movingBlock;
-		movingBlock->nextBlock = currentBlock;
+		previousBlock->nextBlock = *movingBlock;
+		(*movingBlock)->nextBlock = currentBlock;
 	}
 	///change the memory
 	int sizeOfBlock = sizeof(MyBlock);
-	int totalSizeOfBlock = sizeOfBlock + movingBlock->contentSize;
+	int totalSizeOfBlock = sizeOfBlock + (*movingBlock)->contentSize;
 	printf("Debug : memory modification\n");
 	for (int i = 0; i < totalSizeOfBlock; i++) {
 		newMemoryPtr[i] = ((char *)movingBlock)[i];
 	}
+	(*movingBlock)->contentPtr = newMemoryPtr+sizeOfBlock;
 	movingBlock = (MyBlock*)newMemoryPtr;
 	if (currentBlock == NULL) {
 		printf("Debug : NULL check\n");
@@ -261,9 +262,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock *movingBlock) {
 		previousBlock->nextBlock = *movingBlock;
 		(*movingBlock)->nextBlock = currentBlock;
 	}
-	
-	movingBlock->contentPtr = newMemoryPtr+sizeOfBlock;
-	movingBlock = newMemoryPtr;
+
 }
 
 int myFree(void *ptr) {
