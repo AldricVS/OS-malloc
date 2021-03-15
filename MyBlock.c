@@ -94,22 +94,12 @@ void *searchBestSpace(int nBytes, MyBlock *previousBlock) {
 	// Here, the validSpacePtr can be NULL, but we can still have enough space to insert the block
 	// if it is the case, we compress all blocks
 	if (validSpacePtr == NULL) {
-		if (totalSpaceAvailable >= nBytes + sizeof(MyBlock)) {
-			//TODO : call the compress function
-			return NULL;
-		}
-		else {
-			return NULL;
-		}
+		return NULL;
 	}
 	return validSpacePtr;
 }
 
 void *searchValidSpace(int nBytes, MyBlock *previousBlock) {
-	int totalSpaceAvailable = 0;
-	int minSpaceSizeAvailable = INT_MAX;
-	void *validSpacePtr = NULL;
-
 	// If there is no block now
 	if (memory.listBlock == NULL) {
 		char *memoryStart = memory.array;
@@ -197,7 +187,7 @@ void *myAlloc(int nBytes) {
 	}
 }
 
-void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
+void moveBlockInMemory(char* newMemoryPtr, MyBlock *movingBlock) {
 	///Check if we try to move in the same place
 	if (newMemoryPtr == (char*)movingBlock) {
 		printf("Error : Trying to move the block to the same location\n");
@@ -207,14 +197,14 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 	MyBlock currentBlock = memory.listBlock;
 	MyBlock previousBlock = NULL;
 	printf("Debug : current block address = %p\n", currentBlock);
-	while ((currentBlock != NULL) && (currentBlock != movingBlock)){
+	while ((currentBlock != NULL) && (currentBlock != *movingBlock)){
 		previousBlock = currentBlock;
 		currentBlock = currentBlock->nextBlock;
 		printf("Debug : current block address = %p\n", currentBlock);
 	}
 	printf("Debug : found block address = %p\n", currentBlock);
 	///Error check
-	if ((previousBlock == NULL) && (currentBlock != movingBlock)) {
+	if ((previousBlock == NULL) && (currentBlock != *movingBlock)) {
 		printf("Error : No Block in the Memory list\n");
 		return;
 	}
@@ -244,6 +234,7 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 		printf("Error : couldn't retrieve a block in memory list\n");
 		return;
 	}
+
 	if (currentBlock == NULL) {
 		printf("Debug : currentBlock NULL check -> Block will be last in list\n");
 		previousBlock->nextBlock = movingBlock;
@@ -258,11 +249,21 @@ void moveBlockInMemory(char* newMemoryPtr, MyBlock movingBlock) {
 	int totalSizeOfBlock = sizeOfBlock + movingBlock->contentSize;
 	printf("Debug : memory modification\n");
 	for (int i = 0; i < totalSizeOfBlock; i++) {
-		newMemoryPtr[i] = ((char*)movingBlock)[i];
+		newMemoryPtr[i] = ((char *)movingBlock)[i];
 	}
+	movingBlock = (MyBlock*)newMemoryPtr;
+	if (currentBlock == NULL) {
+		printf("Debug : NULL check\n");
+		previousBlock->nextBlock = *movingBlock;
+		(*movingBlock)->nextBlock = NULL;
+	}
+	else {
+		previousBlock->nextBlock = *movingBlock;
+		(*movingBlock)->nextBlock = currentBlock;
+	}
+	
 	movingBlock->contentPtr = newMemoryPtr+sizeOfBlock;
 	movingBlock = newMemoryPtr;
-
 }
 
 int myFree(void *ptr) {
@@ -301,7 +302,8 @@ int myFree(void *ptr) {
 }
 
 void displayBlock(MyBlock block) {
-	printf("\tBlock address : 0x%p\n", block->contentPtr);
+	printf("\tBlock address : 0x%p\n", block);
+	printf("\tBlock content pointer address : 0x%p\n", block->contentPtr);
 	printf("\tBlock size : %d", block->contentSize);
 	printf("\n");
 	printf("\t***\n");

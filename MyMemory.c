@@ -1,6 +1,7 @@
 #include "MyMemory.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 MyMemory memory;
 
@@ -59,25 +60,45 @@ void clearListBlock() {
 	}
 }
 
+void moveBlock(MyBlock *blockToMove, char *destination) {
+	int spaceToCopy = sizeof(MyBlock) + (*blockToMove)->contentSize;
+	char *data = (char *)(*blockToMove);
+	for (int i = 0; i < spaceToCopy; i++) {
+		destination[i] = data[i];
+	}
+	*blockToMove = (MyBlock)destination;
+	// Move also the content pointer
+	(*blockToMove)->contentPtr = destination + sizeof(MyBlock);
+}
+
 void defragMemory() {
 	if (isMemoryFree()) {
 		printf("Impossible to defragment memory :\n\tMemory is free\n");
 		return;
 	}
-	MyBlock currentBlock = memory.listBlock;
-	if ((char*)currentBlock != memory.array) {
-		//the first block isn't at the start of the memory
-		moveBlockInMemory(memory.array, currentBlock);
+	else if (memory.listBlock == NULL) {
+		printf("Cannot defrag memory : No memory block is curently allocated\n");
+		return;
 	}
-	MyBlock previousBlock = currentBlock;
-	currentBlock = currentBlock->nextBlock;
-	while (currentBlock != NULL) {
-		//move all other block in memory
-		void* ptrNextMemory = previousBlock->contentPtr + previousBlock->contentSize;
-		moveBlockInMemory(ptrNextMemory, currentBlock);
-		///passons au block suivant
-		previousBlock = currentBlock;
-		currentBlock = currentBlock->nextBlock;
+	// Check first block that is right to the beginning
+	MyBlock block = memory.listBlock;
+	if ((char*)block > memory.array) {
+		moveBlock(&block, memory.array);
+	}
+
+	// Then, check all blocks in the list
+	MyBlock previousBlock = block;
+	block = block->nextBlock;
+	while (block != NULL) {
+		char *endPreviousBlockPtr = (char *)previousBlock->contentPtr + previousBlock->contentSize;
+		char *blockBeginPtr = (char *)block;
+		if (endPreviousBlockPtr != blockBeginPtr) {
+			moveBlock(&block, endPreviousBlockPtr);
+			previousBlock->nextBlock = (MyBlock)endPreviousBlockPtr;
+			block = (MyBlock)endPreviousBlockPtr;
+		}
+		previousBlock = block;
+		block = block->nextBlock;
 	}
 }
 

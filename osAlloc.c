@@ -10,11 +10,6 @@
 
 extern MyMemory memory;
 
-struct V {
-	int a;
-	char b;
-};
-
 int test();
 
 int main(int argc, char** argv) {
@@ -51,6 +46,15 @@ int main(int argc, char** argv) {
 	}
 	return 0;
 }
+
+/**
+* Simple structure used to test allocation of more complex things.
+* Structure composed with an integer and a character.
+*/
+struct V {
+	int a;
+	char b;
+};
 
 int test() {
 	printf("======== Start of the test ========\n");
@@ -134,9 +138,6 @@ int test() {
 
 	printf("Move block e after block b\n");
 	int blockSize = sizeof(MyBlock);
-	printf("Debug : block size = %d\n", blockSize);
-	printf("Debug : e block address = %p\n", e-blockSize+2);
-	moveBlockInMemory((char*)b+blockBSize+blockSize, (MyBlock)(e-blockSize+2));
 	displayMemory();
 
 	freeMemory();
