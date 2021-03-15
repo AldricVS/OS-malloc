@@ -136,10 +136,6 @@ int test() {
 	*e = 2;
 	displayMemory();
 
-	printf("Move block e after block b\n");
-	int blockSize = sizeof(MyBlock);
-	displayMemory();
-
 	freeMemory();
 	printf("======== End of the test ========\n");
 	return 0;
