@@ -70,11 +70,14 @@ void defragMemory() {
 		moveBlockInMemory(memory.array, currentBlock);
 	}
 	MyBlock previousBlock = currentBlock;
-	while ((currentBlock = currentBlock->nextBlock) != NULL) {
+	currentBlock = currentBlock->nextBlock;
+	while (currentBlock != NULL) {
 		//move all other block in memory
 		void* ptrNextMemory = previousBlock->contentPtr + previousBlock->contentSize;
 		moveBlockInMemory(ptrNextMemory, currentBlock);
+		///passons au block suivant
 		previousBlock = currentBlock;
+		currentBlock = currentBlock->nextBlock;
 	}
 }
 

@@ -39,6 +39,7 @@ typedef struct myBlockCel {
 void *myAlloc(int nBytes);
 
 /**
+ * \deprecated do not
  * Move a block inside the memory to the new specified space
  *
  * \param newMemoryPtr the new space inside the memory where the block will be set
