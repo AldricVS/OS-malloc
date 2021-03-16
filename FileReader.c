@@ -40,12 +40,10 @@ void executeFile(char *path) {
 			parametersCount = sscanf(buffer, "%s %d", command, &value);
 			// If parametersCount is 0, we skip this line
 			if (parametersCount < 1) {
-				printf("Cannot read line %d", lineCounter);
-				continue;
+				printf("Cannot read line %d\n", lineCounter);
 			}
-
 			// We have a value if we have read 2 parameters
-			if(!executeCommand(command, parametersCount == 2, value)){
+			else if(!executeCommand(command, parametersCount == 2, value)){
 				break;
 			}
 			lineCounter++;
