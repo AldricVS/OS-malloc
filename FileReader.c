@@ -28,12 +28,13 @@ void executeFile(char *path) {
 		// Read each line of the file
 		char buffer[FILE_BUFFER_SIZE + 1];
 
-		char command[20];
+		char command[FILE_BUFFER_SIZE + 1];
 		int value = 0, parametersCount;
 		int lineCounter = 1;
 		// Read line by line, and execute in the order
 		while (fgets(buffer, FILE_BUFFER_SIZE, file) != NULL) {
 			removeNewLineFromString(buffer);
+			printf("%s\n", buffer);
 			// Try to read a string and a number, but the number is not needed for commands
 			// such as "disp" or "end", so the parametersCount checks the number of arguments
 			// effectively red.
@@ -50,12 +51,10 @@ void executeFile(char *path) {
 			}
 			lineCounter++;
 		}
-
 		//check if memory is free, and do it if not the case
 		if (!isMemoryFree()) {
 			clearMem();
 		}
-
 		fclose(file);
 	}
 }
@@ -66,7 +65,7 @@ void removeNewLineFromString(char *string) {
 
 int executeCommand(char *commandName, int isThereAnyValue, int value) {
 	if(!isCommandExists(commandName)){
-		printf("The command \"%s\" does not exists");
+		printf("The command \"%s\" does not exists\n", commandName);
 		return 0;
 	}
 	if (areStringEquals(commandName, "disp")) {
