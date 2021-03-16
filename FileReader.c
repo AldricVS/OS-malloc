@@ -34,7 +34,6 @@ void executeFile(char *path) {
 		// Read line by line, and execute in the order
 		while (fgets(buffer, FILE_BUFFER_SIZE, file) != NULL) {
 			removeNewLineFromString(buffer);
-			printf("%s\n", buffer);
 			// Try to read a string and a number, but the number is not needed for commands
 			// such as "disp" or "end", so the parametersCount checks the number of arguments
 			// effectively red.
