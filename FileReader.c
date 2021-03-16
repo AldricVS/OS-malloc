@@ -7,9 +7,16 @@
 
 #define FILE_BUFFER_SIZE 254
 
-void executeCommand(char *commandName, int isThereAnyValue, int value);
 void removeNewLineFromString(char *string);
 int areStringEquals(char *string1, char *string2);
+
+int isCommandExists(char *command){
+	return areStringEquals(command, "init") ||
+		areStringEquals(command, "end") ||
+		areStringEquals(command, "alloc") ||
+		areStringEquals(command, "desalloc") ||
+		areStringEquals(command, "disp");
+}
 
 void executeFile(char *path) {
 	FILE *file = fopen(path, "r");
@@ -38,7 +45,9 @@ void executeFile(char *path) {
 			}
 
 			// We have a value if we have read 2 parameters
-			executeCommand(command, parametersCount == 2, value);
+			if(!executeCommand(command, parametersCount == 2, value)){
+				break;
+			}
 			lineCounter++;
 		}
 
@@ -55,7 +64,11 @@ void removeNewLineFromString(char *string) {
 	string[strcspn(string, "\r\n")] = 0;
 }
 
-void executeCommand(char *commandName, int isThereAnyValue, int value) {
+int executeCommand(char *commandName, int isThereAnyValue, int value) {
+	if(!isCommandExists(commandName)){
+		printf("The command \"%s\" does not exists");
+		return 0;
+	}
 	if (areStringEquals(commandName, "disp")) {
 		displayMem();
 	}
@@ -65,6 +78,7 @@ void executeCommand(char *commandName, int isThereAnyValue, int value) {
 	else {
 		if (!isThereAnyValue) {
 			printf("The command \"%s\" probably need one integer parameter\n", commandName);
+			return 0;
 		}
 		else {
 			if (areStringEquals(commandName, "init")) {
@@ -78,9 +92,11 @@ void executeCommand(char *commandName, int isThereAnyValue, int value) {
 			}
 			else {
 				printf("The command \"%s\" does not exists\n", commandName);
+				return 0;
 			}
 		}
 	}
+	return 1;
 }
 
 int areStringEquals(char *string1, char *string2) {
